@@ -10,6 +10,10 @@ export const userRegistration = async (req, res, next) => {
         if (error) {
             return res.status(400).json(error)
         }
+        const existingUser = await UserModel.findOne({email: value.email})
+            if (existingUser) {
+                return res.status(409).json("User already exists")
+            }
         // Hash the password using bcrypt
         const saltRounds = 10; // Define the number of salt rounds
         value.password = await bcrypt.hash(value.password, saltRounds);
